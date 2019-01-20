@@ -363,7 +363,7 @@ def _find_image_files(data_dir, labels_file):
     labels: list of integer; each integer identifies the ground truth.
   """
   print('Determining list of input files and labels from %s.' % data_dir)
-  unique_labels = [l.strip(' ', 1) for l in tf.gfile.FastGFile(
+  unique_labels = [l.split(' ', 1) for l in tf.gfile.FastGFile(
       labels_file, 'r').readlines()]
 
   labels = []
@@ -425,8 +425,8 @@ def main(unused_argv):
   print('Saving results to %s' % FLAGS.output_directory)
 
   # Run it!
-  _process_dataset('validation', FLAGS.validation_directory,
-                   FLAGS.validation_shards, FLAGS.labels_file)
+  # _process_dataset('validation', FLAGS.validation_directory,
+  #                  FLAGS.validation_shards, FLAGS.labels_file)
   _process_dataset('train', FLAGS.train_directory,
                    FLAGS.train_shards, FLAGS.labels_file)
 
