@@ -375,9 +375,10 @@ def _find_image_files(data_dir, labels_file):
 
   # Construct the list of JPEG files and labels.
   for label_name, text in unique_labels:
-    jpeg_file_path = '%s/%s*' % (data_dir, label_name)
+    jpeg_file_path = '*/%s_*' % label_name
     matching_files = tf.gfile.Glob(jpeg_file_path)
-
+    print('matching_files:')
+    print(matching_files[:2], '...')
     labels.extend([label_index] * len(matching_files))
     texts.extend([text] * len(matching_files))
     filenames.extend(matching_files)
