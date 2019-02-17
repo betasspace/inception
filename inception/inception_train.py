@@ -353,8 +353,8 @@ def train(dataset):
                 slim.variables.VARIABLES_TO_RESTORE)
             restorer = tf.train.Saver(variables_to_restore)
             restorer.restore(sess, FLAGS.pretrained_model_checkpoint_path)
-            logging.error('%s: Pre-trained model restored from %s' %
-                         (datetime.now(), FLAGS.pretrained_model_checkpoint_path))
+            logging.info('Pre-trained model restored from %s' %
+                         FLAGS.pretrained_model_checkpoint_path)
 
         # Start the queue runners.
         tf.train.start_queue_runners(sess=sess)
@@ -372,9 +372,9 @@ def train(dataset):
 
             if step % 10 == 0:
                 examples_per_sec = FLAGS.batch_size / float(duration)
-                format_str = ('%s: step %d, loss = %.2f (%.1f examples/sec; %.3f '
+                format_str = ('step %d, loss = %.2f (%.1f examples/sec; %.3f '
                               'sec/batch)')
-                logging.error(format_str % (datetime.now(), step, loss_value,
+                logging.info(format_str % (step, loss_value,
                                            examples_per_sec, duration))
 
             if step % 100 == 0:
