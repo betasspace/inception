@@ -87,6 +87,7 @@ def console_out():
     # Define a Handler and set a format which output to file
     logging.basicConfig(
         datefmt='%Y-%m-%d %A %H:%M:%S',  # 时间
+        level=logging.DEBUG,  # 定义输出到文件的log级别
         filemode='w')  # 写入模式“w”或“a”
     # Define a Handler and set a format which output to console
     console = logging.StreamHandler()  # 定义console handler
@@ -98,6 +99,7 @@ def console_out():
 
 def log_file_out(logFilename):
     logging.basicConfig(
+        level=logging.DEBUG,  # 定义输出到文件的log级别
         format='%(levelname)s %(asctime)s %(filename)s:%(lineno)s %(funcName)s]: %(message)s',  # 定义输出log的格式
         datefmt='%m%d %H:%M:%S',  # 时间
         filename=logFilename,  # log文件名
