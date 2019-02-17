@@ -42,7 +42,7 @@ tf.app.flags.DEFINE_integer('max_steps', 10000000,
 tf.app.flags.DEFINE_string('subset', 'train',
                            """Either 'train' or 'validation'.""")
 tf.app.flags.DEFINE_string('log_dir', '',
-                           """Either 'train' or 'validation'.""")
+                           """log file""")
 
 # Flags governing the hardware employed for running TensorFlow.
 tf.app.flags.DEFINE_integer('num_gpus', 1,
@@ -89,12 +89,11 @@ def console_out():
         datefmt='%Y-%m-%d %A %H:%M:%S',  # 时间
         filemode='w')  # 写入模式“w”或“a”
     # Define a Handler and set a format which output to console
-    console = logging.StreamHandler()                  # 定义console handler
-    formatter = logging.Formatter('%(asctime)s  %(filename)s : %(levelname)s  %(message)s')  #定义该handler格式
+    console = logging.StreamHandler()  # 定义console handler
+    formatter = logging.Formatter('%(asctime)s  %(filename)s : %(levelname)s  %(message)s')  # 定义该handler格式
     console.setFormatter(formatter)
     # Create an instance
-    logging.getLogger().addHandler(console)           # 实例化添加handler
-
+    logging.getLogger().addHandler(console)  # 实例化添加handler
 
 
 def log_file_out(logFilename):
@@ -354,8 +353,8 @@ def train(dataset):
                 slim.variables.VARIABLES_TO_RESTORE)
             restorer = tf.train.Saver(variables_to_restore)
             restorer.restore(sess, FLAGS.pretrained_model_checkpoint_path)
-            logging.INFO('%s: Pre-trained model restored from %s' %
-                  (datetime.now(), FLAGS.pretrained_model_checkpoint_path))
+            logging.error('%s: Pre-trained model restored from %s' %
+                         (datetime.now(), FLAGS.pretrained_model_checkpoint_path))
 
         # Start the queue runners.
         tf.train.start_queue_runners(sess=sess)
@@ -375,8 +374,8 @@ def train(dataset):
                 examples_per_sec = FLAGS.batch_size / float(duration)
                 format_str = ('%s: step %d, loss = %.2f (%.1f examples/sec; %.3f '
                               'sec/batch)')
-                logging.INFO(format_str % (datetime.now(), step, loss_value,
-                                    examples_per_sec, duration))
+                logging.error(format_str % (datetime.now(), step, loss_value,
+                                           examples_per_sec, duration))
 
             if step % 100 == 0:
                 summary_str = sess.run(summary_op)
