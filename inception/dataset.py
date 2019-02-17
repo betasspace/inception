@@ -82,6 +82,7 @@ class Dataset(object):
       ValueError: if there are not data_files matching the subset.
     """
     tf_record_pattern = os.path.join(FLAGS.data_dir, '%s-*' % self.subset)
+    print(tf_record_pattern)
     data_files = tf.gfile.Glob(tf_record_pattern)
     if not data_files:
       print('No files found for dataset %s/%s at %s' % (self.name,
