@@ -354,7 +354,16 @@ def train(dataset):
             variables_to_restore = tf.get_collection(
                 slim.variables.VARIABLES_TO_RESTORE)
             restorer = tf.train.Saver(variables_to_restore)
-            restorer.restore(sess, FLAGS.pretrained_model_checkpoint_path)
+            # restorer.restore(sess, FLAGS.pretrained_model_checkpoint_path)
+            ckpt = tf.train.get_checkpoint_state(FLAGS.pretrained_model_checkpoint_path)
+            if ckpt and ckpt.model_checkpoint_path:
+                if os.path.isabs(ckpt.model_checkpoint_path):
+                    # Restores from checkpoint with absolute path.
+                    restorer.restore(sess, ckpt.model_checkpoint_path)
+                else:
+                    # Restores from checkpoint with relative path.
+                    restorer.restore(sess, os.path.join(FLAGS.pretrained_model_checkpoint_path,
+                                                        ckpt.model_checkpoint_path))
             logging.info('Pre-trained model restored from %s' %
                          FLAGS.pretrained_model_checkpoint_path)
 
