@@ -349,6 +349,7 @@ def train(dataset):
             log_device_placement=FLAGS.log_device_placement))
         sess.run(init)
 
+        step = 0
         if FLAGS.pretrained_model_checkpoint_path:
             assert tf.gfile.Exists(FLAGS.pretrained_model_checkpoint_path)
             variables_to_restore = tf.get_collection(
@@ -364,6 +365,7 @@ def train(dataset):
                     # Restores from checkpoint with relative path.
                     restorer.restore(sess, os.path.join(FLAGS.pretrained_model_checkpoint_path,
                                                         ckpt.model_checkpoint_path))
+                step = int(ckpt.model_checkpoint_path.split('/')[-1].split('-')[-1])
             logging.info('Pre-trained model restored from %s' %
                          FLAGS.pretrained_model_checkpoint_path)
 
@@ -374,11 +376,11 @@ def train(dataset):
             FLAGS.train_dir,
             graph=sess.graph)
 
-        for step in range(FLAGS.max_steps):
+        while step < FLAGS.max_steps:
             start_time = time.time()
             _, loss_value = sess.run([train_op, loss])
             duration = time.time() - start_time
-
+            step += 1
             assert not np.isnan(loss_value), 'Model diverged with loss = NaN'
 
             if step % 10 == 0:
@@ -393,6 +395,6 @@ def train(dataset):
                 summary_writer.add_summary(summary_str, step)
 
             # Save the model checkpoint periodically.
-            if step % 500 == 0 or (step + 1) == FLAGS.max_steps:
+            if step % 5000 == 0 or (step + 1) == FLAGS.max_steps:
                 checkpoint_path = os.path.join(FLAGS.train_dir, 'model.ckpt')
                 saver.save(sess, checkpoint_path, global_step=step)
